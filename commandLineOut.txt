@@ -1,0 +1,139 @@
+(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python model.py
+Using TensorFlow backend.
+I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library libcublas.so locally
+I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library libcudnn.so locally
+I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library libcufft.so locally
+I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library libcurand.so locally
+compiling and using use_model mine =  mine
+  GETTING NEW SAMPLES
+Epoch 1/30
+loop_count =  0
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties:
+name: TITAN X (Pascal)
+major: 6 minor: 1 memoryClockRate (GHz) 1.531
+pciBusID 0000:4b:00.0
+Total memory: 11.90GiB
+Free memory: 11.12GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: TITAN X (Pascal), pci bus id: 0000:4b:00.0)
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0432  GETTING NEW SAMPLES
+loop_count =  1
+17927/17927 [==============================] - 33s - loss: 0.0432
+Epoch 2/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0317  GETTING NEW SAMPLES
+loop_count =  2
+17927/17927 [==============================] - 32s - loss: 0.0317
+Epoch 3/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0293  GETTING NEW SAMPLES
+loop_count =  3
+17927/17927 [==============================] - 35s - loss: 0.0293
+Epoch 4/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0268  GETTING NEW SAMPLES
+loop_count =  4
+17927/17927 [==============================] - 35s - loss: 0.0268
+Epoch 5/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0256  GETTING NEW SAMPLES
+loop_count =  5
+17927/17927 [==============================] - 36s - loss: 0.0256
+Epoch 6/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0242  GETTING NEW SAMPLES
+loop_count =  6
+17927/17927 [==============================] - 35s - loss: 0.0242
+Epoch 7/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0224  GETTING NEW SAMPLES
+loop_count =  7
+17927/17927 [==============================] - 36s - loss: 0.0224
+Epoch 8/30
+  GETTING NEW SAMPLES ===================>.] - ETA: 0s - loss: 0.0217
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0217loop_count =  8
+17927/17927 [==============================] - 34s - loss: 0.0217
+Epoch 9/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0212  GETTING NEW SAMPLES
+loop_count =  9
+17927/17927 [==============================] - 34s - loss: 0.0212
+Epoch 10/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0201  GETTING NEW SAMPLES
+loop_count =  10
+17927/17927 [==============================] - 36s - loss: 0.0201
+Epoch 11/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0198  GETTING NEW SAMPLES
+loop_count =  11
+17927/17927 [==============================] - 35s - loss: 0.0198
+Epoch 12/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0193  GETTING NEW SAMPLES
+loop_count =  12
+17927/17927 [==============================] - 35s - loss: 0.0193
+Epoch 13/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0196  GETTING NEW SAMPLES
+loop_count =  13
+17927/17927 [==============================] - 35s - loss: 0.0196
+Epoch 14/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0185  GETTING NEW SAMPLES
+loop_count =  14
+17927/17927 [==============================] - 34s - loss: 0.0185
+Epoch 15/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0184  GETTING NEW SAMPLES
+loop_count =  15
+17927/17927 [==============================] - 35s - loss: 0.0184
+Epoch 16/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0184  GETTING NEW SAMPLES
+loop_count =  16
+17927/17927 [==============================] - 36s - loss: 0.0184
+Epoch 17/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0176  GETTING NEW SAMPLES
+loop_count =  17
+17927/17927 [==============================] - 35s - loss: 0.0176
+Epoch 18/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0170  GETTING NEW SAMPLES
+loop_count =  18
+17927/17927 [==============================] - 35s - loss: 0.0170
+Epoch 19/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0171  GETTING NEW SAMPLES
+loop_count =  19
+17927/17927 [==============================] - 35s - loss: 0.0171
+Epoch 20/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0168  GETTING NEW SAMPLES
+loop_count =  20
+17927/17927 [==============================] - 33s - loss: 0.0168
+Epoch 21/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0168  GETTING NEW SAMPLES
+loop_count =  21
+17927/17927 [==============================] - 35s - loss: 0.0168
+Epoch 22/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0165  GETTING NEW SAMPLES
+loop_count =  22
+17927/17927 [==============================] - 35s - loss: 0.0165
+Epoch 23/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0161  GETTING NEW SAMPLES
+loop_count =  23
+17927/17927 [==============================] - 35s - loss: 0.0161
+Epoch 24/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0160  GETTING NEW SAMPLES
+loop_count =  24
+17927/17927 [==============================] - 35s - loss: 0.0160
+Epoch 25/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0156  GETTING NEW SAMPLES
+loop_count =  25
+17927/17927 [==============================] - 35s - loss: 0.0156
+Epoch 26/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0160  GETTING NEW SAMPLES
+loop_count =  26
+17927/17927 [==============================] - 35s - loss: 0.0160
+Epoch 27/30
+17888/17927 [============================>.] - ETA: 0s - loss: 0.0158  GETTING NEW SAMPLES
+loop_count =  27
+17927/17927 [==============================] - 35s - loss: 0.0158
+Epoch 28/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0152  GETTING NEW SAMPLES
+loop_count =  28
+17927/17927 [==============================] - 35s - loss: 0.0152
+Epoch 29/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0149  GETTING NEW SAMPLES
+loop_count =  29
+17927/17927 [==============================] - 36s - loss: 0.0149
+Epoch 30/30
+17920/17927 [============================>.] - ETA: 0s - loss: 0.0150  GETTING NEW SAMPLES
+loop_count =  30
+17927/17927 [==============================] - 35s - loss: 0.0150
