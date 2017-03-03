@@ -365,7 +365,7 @@ def distribute_samples(samples,max_count=200):
         samples = list of lines from csv file from simulator
         max_count = maximum count to keep
     Returns:
-        new_samples = new numpy array with fewer items
+        new_samples = new numpy array with binned angles to max_count
     '''
     ####  Get angle data
     angle_array = []

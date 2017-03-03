@@ -17,9 +17,7 @@ from cv2 import imread
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle as skshuffle
 
-# train_samples, validation_samples = train_test_split(samples, test_size=0.2,
-#                                                      random_state=42)
-############## read in data #############
+############## Define Generator #############
 
 def generator(samples,newsize,batch_size=32,max_count=200):
     zero_thresh = 0.3
@@ -33,20 +31,21 @@ def generator(samples,newsize,batch_size=32,max_count=200):
         print('  GETTING NEW SAMPLES ' )
         print('loop_count = ', loop_count)
         np.random.shuffle(samples)
-        bin_samples = distribute_samples(samples,max_count=max_count)  # get reduced count samples
+        # create binned version of larger sample base with flatter distribution
+        bin_samples = distribute_samples(samples,max_count=max_count)
         num_samples = len(bin_samples)
         loop_count += 1
         if loop_count > 2 and increment_zero_thresh:
-            zero_thresh += 0.1
+            zero_thresh += 0.1  # experimented with this, but not used in end
             print('zero_thresh = ',zero_thresh)
         for offset in range(0, num_samples, batch_size):
             batch_samples = bin_samples[offset:offset+batch_size]
             images = []
             angles = []
             for batch in batch_samples:
-                if zero_thresh < 1.0:
+                if zero_thresh < 1.0: # if rejecting small angles
                     keep_search = 1
-                    while keep_search:
+                    while keep_search: # search for sample meeting criteria
                         rand_indx = random.randint(0,len(bin_samples)-1)
                         line_sample = bin_samples[rand_indx]
                         if abs(float(line_sample[3])) < zero_reject_range:
@@ -70,17 +69,19 @@ def generator(samples,newsize,batch_size=32,max_count=200):
             yield skshuffle(X_train, y_train)
 
 
-# compile and train the model using the generator function
+# Main code here
+# load data samples from udacity and my sim data
 samples = load_samples(use_mydata = 1) ## use_mdata = 0, load udacity data only
 np.random.shuffle(samples)
+# choose which model to use
 use_model = 'mine'
 #use_model = 'vivek'
 #use_model = 'nvidia'
-compile_model = 1
-validate = 0
+compile_model = 1 # compile model or use previous one in directory
+validate = 0  # split into training and validation or just run training only
 batch_size = 32
 num_epochs = 30
-max_count = 200
+max_count = 200  # maximum count returned from distribute_samples()
 
 if use_model == 'mine':
     newsize = (32,128,3)
@@ -92,6 +93,7 @@ else:
     print('no model specied')
 
 ### samples_per_epoch needs to match what is used in generator
+##  create generators for training and validation 
 if validate:
     train_samples, validation_samples = train_test_split(samples, test_size=0.2,
                                                           random_state=42)
