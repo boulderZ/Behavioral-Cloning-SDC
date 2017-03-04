@@ -173,17 +173,17 @@ While developing the image augmentation pipeline, I decided to test speed perfor
 
 The first test was for image resize. I compared using `scipy.mis.imresize` to `skimage.transform.resize.` The  `scipy.mis.imresize` was 4X faster.
 `import timeit
->>> setup = '''
-... from skimage import io
-... from scipy.misc import imresize
-... image = io.imread('center_2016_12_01_13_43_17_948.jpg')
-... '''
->>> timeit.timeit('image_scip = imresize(image,(32,128,3))',setup=setup,number=1000)
+setup = '''
+from skimage import io
+from scipy.misc import imresize
+image = io.imread('center_2016_12_01_13_43_17_948.jpg')
+'''
+timeit.timeit('image_scip = imresize(image,(32,128,3))',setup=setup,number=1000)
 0.5462722443044186
->>> setup2 = '''
-... from skimage.transform import resize
-... from skimage import io
-... image = io.imread('center_2016_12_01_13_43_17_948.jpg')
+setup2 = '''
+from skimage.transform import resize
+from skimage import io
+image = io.imread('center_2016_12_01_13_43_17_948.jpg')
 '''
  timeit.timeit('image_tr = resize(image,(32,128,3))',setup=setup2,number=1000)
 2.136311042122543`
