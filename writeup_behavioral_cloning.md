@@ -18,9 +18,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[//]: # [figure1]: ./figures/figure_1.png "Augmentation Examples without cropping"
-[figure1]: ./figures/pipeline_all.png "Augmentation Examples followed by crop/normalize"
-
+[figure1]: ./figures/no_crop_pipeline.png "Augmentation Examples without cropping"
 [figure2]: ./figures/pipeline_all.png "Augmentation Examples followed by crop/normalize"
 [figure3]: ./figures/combined_steer_before_augment.png "Steering Histogram before binning and augmentation"
 [figure4]: ./figures/steer_after_binning.png "Steering Histogram after Binning"
