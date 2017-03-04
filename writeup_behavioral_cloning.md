@@ -128,14 +128,14 @@ Examples of the various augmentation types are shown without cropping in figure 
 
 ![alt text][figure1]
 <p align="center">
-<b>Figure 1: Augmentation Examples without cropping</b<br>
+<b>Figure 1: Augmentation Examples without cropping</b>
 </p>
 
 And a similar figure shown with cropping followed by normalization of the last row in figure 2.
 
 ![alt text][figure2]
 <p align="center">
-<b>Figure 2: Augmentation Examples followed by crop/normalize</b<br>
+<b>Figure 2: Augmentation Examples followed by crop/normalize</b>
 </p>
 
 The augmentation flow was implemented in `process_image_pipeline()` in lines 123-164 of mymods.py. The order was: camera angle, brightness,shadow,shift,flip, cropping. Camera angle was experimented with but not used in the model turned in for this project. Brightness,shadow,and shift were all applied with a random probability of 0.3. Flipping was applied with probability of 0.5. The individual functions for each augmentation type are all in mymods.py.
@@ -146,14 +146,14 @@ The distribution of angles is very important for the model to work. There are to
 
 ![alt text][figure3]
 <p align="center">
-<b>Figure 3: Steering Histogram before binning and augmentation</b<br>
+<b>Figure 3: Steering Histogram before binning and augmentation</b>
 </p>
 
 At each epoch beginning, the original data samples (27,059) are shuffled and then passed to a binning algorithm  (`distribute_samples()`, lines 357-389 in mymods.py) that returns a binned version of the original data with a maximum count for each angle bin. This helps to distribute the classes (angles) so that there will be less of a bias towards going  straight. Since the binned samples are drawn from a shuffled version of the original samples, there will be variety in any classes that had more than the max count of angles in the original data.  A sample histogram of this binned result is shown in figure 4.
 
 ![alt text][figure4]
 <p align="center">
-<b>Figure 4: Steering Histogram after Binning</b<br>
+<b>Figure 4: Steering Histogram after Binning</b>
 </p>
 
 The binned samples are then put into batches for processing in the generator function. The loop for processing each image has further data distribution  controls to limit the samples near zero angles before augmentation. The loop will keep angles within a range with a probability and range that can be programmed. I used a probability of 0.3 and a range of -0.2 to 0.2. That means it keeps 30% of all values within the range of -0.2 to 0.2. Any angles outside of that range are not limited.
@@ -162,7 +162,7 @@ The augmentation will change the distribution of angles when any of the augment 
 
 ![alt text][figure5]
 <p align="center">
-<b>Figure 5: Sample Steering Histogram after Binning and Augmentation</b<br>
+<b>Figure 5: Sample Steering Histogram after Binning and Augmentation</b>
 </p>
 
 ### Conclusions and further work
