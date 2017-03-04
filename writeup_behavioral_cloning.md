@@ -167,3 +167,55 @@ The augmentation will change the distribution of angles when any of the augment 
 
 ### Conclusions and further work
 The car drives around track one but does not generalize to track 2. To do this would require a lot more training data and further augmentation. Also the model would benefit from further control of the data distribution. This version of my code does not completely control the distribution of the angles and I believe suffers in performance because of that. I have been working on another version which I will post separately but for now I need to move on to the other projects. I have completed code that will downsample the original data in a way that will account for stopping and starting the recording in different portions of the track. This is to reduce the number of essentially duplicate images that result from the FPS (frames per second) being so high. The Nvidia paper mentions this as well. The other thing I am doing is to simply save the augmented images in a directory so that I can have more control over the final distribution when binning the data.
+
+### Appendix Speed Considerations
+While developing the image augmentation pipeline, I decided to test speed performance on some parts of my pipeline. I was surprised by some of the results so will post here. I used `timeit` on several cases where I had multiple ways to do the same thing. I believe it is important to consider these options when developing a pipeline.
+
+The first test was for image resize. I compared using `scipy.mis.imresize` to `skimage.transform.resize.` The  `scipy.mis.imresize` was 4X faster.
+`import timeit
+>>> setup = '''
+... from skimage import io
+... from scipy.misc import imresize
+... image = io.imread('center_2016_12_01_13_43_17_948.jpg')
+... '''
+>>> timeit.timeit('image_scip = imresize(image,(32,128,3))',setup=setup,number=1000)
+0.5462722443044186
+>>> setup2 = '''
+... from skimage.transform import resize
+... from skimage import io
+... image = io.imread('center_2016_12_01_13_43_17_948.jpg')
+'''
+ timeit.timeit('image_tr = resize(image,(32,128,3))',setup=setup2,number=1000)
+2.136311042122543`
+
+Next compared `random.random()` to `np.random.random()`. This one surprised be as the numpy version was slower.
+`(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import random' 'random.random()'
+10000000 loops, best of 3: 0.0549 usec per loop
+(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import numpy as np' 'np.random.random()'
+10000000 loops, best of 3: 0.107 usec per loop`
+
+Then compared `np.random.randint()` to `random.randint()`. Again  the numpy version was slower for this use case.
+`(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import random' 'random.randint(0,7999)'
+1000000 loops, best of 3: 1.09 usec per loop
+(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import numpy as np' 'np.random.randint(8000)'
+1000000 loops, best of 3: 1.37 usec per loop`
+
+The next one was used in the shadow creation. Basically should always avoid using np.random.choice if possible. Almost 10X slower.
+`(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import random' 'x=random.randint(0,329); y=random.randint(0,329)'
+100000 loops, best of 3: 2.42 usec per loop
+(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import numpy as np' '[x,y]=np.random.choice(320,2,replace=False)'
+10000 loops, best of 3: 27.3 usec per loop`
+
+Then compared `np.random.uniform()` to `random.random.uniform()`. This time numpy version was faster by about 2X.
+`(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import random' 'tx = random.uniform(-50.,50.)'
+1000000 loops, best of 3: 0.235 usec per loop
+(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import numpy as np' 'tx = np.random.uniform(-50.,50.)'
+10000000 loops, best of 3: 0.127 usec per loop`
+
+The last one I looked at was for a shuffle function. This time numpy was clear winner by a huge margin.
+`(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'from random import shuffle' 'shuffle([1,2,3,4,5,6,7,8,9,10])'
+100000 loops, best of 3: 6.21 usec per loop
+(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'from sklearn.utils import shuffle' 'x=shuffle([1,2,3,4,5,6,7,8,9,10])'
+10000 loops, best of 3: 28.4 usec per loop
+(carnd-term1-gpu) ai@deep:~/CarND-Behavioral-Cloning-P3$ python -m timeit -s 'import numpy as np' 'np.random.shuffle([1,2,3,4,5,6,7,8,9,10])'
+1000000 loops, best of 3: 0.572 usec per loop`
