@@ -18,13 +18,12 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[figure1]: ./figures/pipleline_no_crop.png "Augmentation Examples without cropping"
+[figure2]: ./figures/pipeline_all.png "Augmentation Examples followed by crop/normalize"
+[figure3]: ./figures/combined_steer_before_augment.png "Steering Histogram before binning and augmentation"
+[figure4]: ./figures/steer_after_binning.png "Steering Histogram after Binning"
+[figure5]: ./figures/combined_steer_augment.png "Sample Steering Histogram after Binning and Augmentation"
+
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -92,17 +91,19 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 ####2. Final Model Architecture
 
 The final model architecture (model.py lines 124-144) consisted of a convolutional neural network with the following layers and layer sizes:
+
 | Layers        |  Size         |
-| ------------- |:-------------:|
+| ------------- |-------------|
+| Input         | 32x128x3
 | Conv          | 3x3x16        |
 | MaxPool       | 2x2           |  
 | Conv          | 3x3x32        |
 | MaxPool       | 2x2    |
 | Conv        | 3x3x64 |
 | MaxPool   | 2x2 |
-| Fully Connectedect | 500 |
+| Fully Connected | 500 |
 | Dropout      | 0.5 |
-| Fully Connect | 100 |
+| Fully Connected | 100 |
 | Dropout  | 0.25 |
 | Fully Connect | 20 |
 | Fully Connect | 1 |
@@ -115,34 +116,38 @@ I started with the supplied udacity training data and added to it with my own dr
 I wanted to augment the data on the fly rather than store augmented images on the hard drive.  My approach was to use only the 27,059 samples and then randomly generate augmented images on the fly for every training epoch. I will discuss how I controlled the distribution of the data in the next section. Here I will detail the augmentation pipeline itself. I used the following types of augmentation and implemented each one randomly: camera angle, flipping, brightness, shadow, shift, cropping. While developing the augmentation I also investigated the speed performance of different methods. When using an inline augmentation pipeline, it is important to consider speed of processing. I will show some of the speed results in an appendix for those interested. One thing interesting that I found: the base random class was faster than the numpy version by a fair amount when used for single values like random.random(). I put comments in my source code wherever I did speed comparisons. Each type of augmentation is described in the table below:
 
 | Augment Type   |  Description        |
-| -------------  |:-------------:|
+| -------------  |-------------|
 | Camera Angle   | Described in lecture. Use left and right cameras and adjusted steering by +/- 0.25 from original center value|
 | Flip           | Described in lecture. Flip the image and use negative of original steer angle |
 | Brightness     | Vary brightness of image by multiplying it by a value between 0.3 and 1.3 and then clipping to 255 to avoid the wrap |
 | Shadow         | Add simulated shadow to the image. Modified a clever approach from A. Staravoitau |
 | Shift          | Shift the image horizontal and adjust steering angle. Modified approach from V.Yadav.
-| Cropping       | In addition to normal cropping, vary the position of the crop up and down by small amount. |
+| Cropping       | In addition to normal cropping, vary the position of the crop up and down by small amount. Mod from A. Staravoitau |
 
-![alt text][image2]
+Examples of the various augmentation types are shown without cropping in figure 1 and with cropping followed by normalization in figure 2.
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+![alt text][figure1]
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
+![alt text][figure2]
 
-Then I repeated this process on track two in order to get more data points.
+The augmentation flow was implemented in `process_image_pipeline()` in lines 123-164 of mymods.py. The order was: camera angle, brightness,shadow,shift,flip, cropping. Camera angle was experimented with but not used in the model turned in for this project. Brightness,shadow,and shift were all applied with a random probability of 0.3. Flipping was applied with probability of 0.5. The individual functions for each augmentation type are all in mymods.py.
 
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
+#### Data distribution
 
-![alt text][image6]
-![alt text][image7]
+The distribution of angles is very important for the model to work. There are too many samples near zero and there is not an even distribution of angles (classes) from either the Udacity data set or data taken from the training simulator. This can be observed by looking at histograms of the angles. The raw histogram before any manipulation of the data is shown in figure 3.
 
-Etc ....
+![alt text][figure3]
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+At each epoch beginning, the original data samples (27,059) are shuffled and then passed to a binning algorithm  (`distribute_samples()`, lines 357-389 in mymods.py) that returns a binned version of the original data with a maximum count for each angle bin. This helps to distribute the classes (angles) so that there will be less of a bias towards going  straight. Since the binned samples are drawn from a shuffled version of the original samples, there will be variety in any classes that had more than the max count of angles in the original data.  A sample histogram of this binned result is shown in figure 4.
+
+![alt text][figure4]
+
+The binned samples are then put into batches for processing in the generator function. The loop for processing each image has further data distribution  controls to limit the samples near zero angles before augmentation. The loop will keep angles within a range with a probability and range that can be programmed. I used a probability of 0.3 and a range of -0.2 to 0.2. That means it keeps 30% of all values within the range of -0.2 to 0.2. Any angles outside of that range are not limited.
+
+The augmentation will change the distribution of angles when any of the augment types of Camera Angle, Shift, or Flip are used. I only used shift and flip in the model turned in for this assignment. An example of the angle histogram after augmentation is shown in figure 5. This was produced using ( `test_distribution()` , lines 245-282 ) in mymods.py.
+
+![alt text][figure5]
 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set.
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+### Conclusions and further work
+The car drives around track one but does not generalize to track 2. To do this would require a lot more training data and further augmentation. Also the model would benefit from further control of the data distribution. This version of my code does not completely control the distribution of the angles and I believe suffers in performance because of that. I have been working on another version which I will post separately but for now I need to move on to the other projects. I have completed code that will downsample the original data in a way that will account for stopping and starting the recording in different portions of the track. This is to reduce the number of essentially duplicate images that result from the FPS (frames per second) being so high. The Nvidia paper mentions this as well. The other thing I am doing is to simply save the augmented images in a directory so that I can have more control over the final distribution when binning the data. 
