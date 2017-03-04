@@ -127,6 +127,9 @@ I wanted to augment the data on the fly rather than store augmented images on th
 Examples of the various augmentation types are shown without cropping in figure 1. This figure shows five original images in the first row. Below each image are 9 versions created from the augmentation pipeline. Images with dark vertical bar on either side are shifted images. You can see that some images have combinations of multiple augment types.
 
 ![alt text][figure1]
+<p align="center">
+<b>Figure 1: Augmentation Examples without cropping</b<br>
+</p>
 *Augmentation Examples without cropping*
 
 And a similar figure shown with cropping followed by normalization of the last row in figure 2.
