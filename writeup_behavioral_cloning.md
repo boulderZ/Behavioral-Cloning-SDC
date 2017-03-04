@@ -124,9 +124,11 @@ I wanted to augment the data on the fly rather than store augmented images on th
 | Shift          | Shift the image horizontal and adjust steering angle. Modified approach from V.Yadav.
 | Cropping       | In addition to normal cropping, vary the position of the crop up and down by small amount. Mod from A. Staravoitau |
 
-Examples of the various augmentation types are shown without cropping in figure 1 and with cropping followed by normalization in figure 2.
+Examples of the various augmentation types are shown without cropping in figure 1.
 
 ![alt text][figure1]
+
+And with cropping followed by normalization in figure 2.
 
 ![alt text][figure2]
 
@@ -150,4 +152,4 @@ The augmentation will change the distribution of angles when any of the augment 
 
 
 ### Conclusions and further work
-The car drives around track one but does not generalize to track 2. To do this would require a lot more training data and further augmentation. Also the model would benefit from further control of the data distribution. This version of my code does not completely control the distribution of the angles and I believe suffers in performance because of that. I have been working on another version which I will post separately but for now I need to move on to the other projects. I have completed code that will downsample the original data in a way that will account for stopping and starting the recording in different portions of the track. This is to reduce the number of essentially duplicate images that result from the FPS (frames per second) being so high. The Nvidia paper mentions this as well. The other thing I am doing is to simply save the augmented images in a directory so that I can have more control over the final distribution when binning the data. 
+The car drives around track one but does not generalize to track 2. To do this would require a lot more training data and further augmentation. Also the model would benefit from further control of the data distribution. This version of my code does not completely control the distribution of the angles and I believe suffers in performance because of that. I have been working on another version which I will post separately but for now I need to move on to the other projects. I have completed code that will downsample the original data in a way that will account for stopping and starting the recording in different portions of the track. This is to reduce the number of essentially duplicate images that result from the FPS (frames per second) being so high. The Nvidia paper mentions this as well. The other thing I am doing is to simply save the augmented images in a directory so that I can have more control over the final distribution when binning the data.
