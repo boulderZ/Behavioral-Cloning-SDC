@@ -130,11 +130,13 @@ Examples of the various augmentation types are shown without cropping in figure 
 <p align="center">
 <b>Figure 1: Augmentation Examples without cropping</b<br>
 </p>
-*Augmentation Examples without cropping*
 
 And a similar figure shown with cropping followed by normalization of the last row in figure 2.
 
 ![alt text][figure2]
+<p align="center">
+<b>Figure 2: Augmentation Examples followed by crop/normalize</b<br>
+</p>
 
 The augmentation flow was implemented in `process_image_pipeline()` in lines 123-164 of mymods.py. The order was: camera angle, brightness,shadow,shift,flip, cropping. Camera angle was experimented with but not used in the model turned in for this project. Brightness,shadow,and shift were all applied with a random probability of 0.3. Flipping was applied with probability of 0.5. The individual functions for each augmentation type are all in mymods.py.
 
@@ -143,17 +145,25 @@ The augmentation flow was implemented in `process_image_pipeline()` in lines 123
 The distribution of angles is very important for the model to work. There are too many samples near zero and there is not an even distribution of angles (classes) from either the Udacity data set or data taken from the training simulator. This can be observed by looking at histograms of the angles. The raw histogram before any manipulation of the data is shown in figure 3.
 
 ![alt text][figure3]
+<p align="center">
+<b>Figure 3: Steering Histogram before binning and augmentation</b<br>
+</p>
 
 At each epoch beginning, the original data samples (27,059) are shuffled and then passed to a binning algorithm  (`distribute_samples()`, lines 357-389 in mymods.py) that returns a binned version of the original data with a maximum count for each angle bin. This helps to distribute the classes (angles) so that there will be less of a bias towards going  straight. Since the binned samples are drawn from a shuffled version of the original samples, there will be variety in any classes that had more than the max count of angles in the original data.  A sample histogram of this binned result is shown in figure 4.
 
 ![alt text][figure4]
+<p align="center">
+<b>Figure 4: Steering Histogram after Binning</b<br>
+</p>
 
 The binned samples are then put into batches for processing in the generator function. The loop for processing each image has further data distribution  controls to limit the samples near zero angles before augmentation. The loop will keep angles within a range with a probability and range that can be programmed. I used a probability of 0.3 and a range of -0.2 to 0.2. That means it keeps 30% of all values within the range of -0.2 to 0.2. Any angles outside of that range are not limited.
 
 The augmentation will change the distribution of angles when any of the augment types of Camera Angle, Shift, or Flip are used. I only used shift and flip in the model turned in for this assignment. An example of the angle histogram after augmentation is shown in figure 5. This was produced using ( `test_distribution()` , lines 245-282 ) in mymods.py.
 
 ![alt text][figure5]
-
+<p align="center">
+<b>Figure 5: Sample Steering Histogram after Binning and Augmentation</b<br>
+</p>
 
 ### Conclusions and further work
 The car drives around track one but does not generalize to track 2. To do this would require a lot more training data and further augmentation. Also the model would benefit from further control of the data distribution. This version of my code does not completely control the distribution of the angles and I believe suffers in performance because of that. I have been working on another version which I will post separately but for now I need to move on to the other projects. I have completed code that will downsample the original data in a way that will account for stopping and starting the recording in different portions of the track. This is to reduce the number of essentially duplicate images that result from the FPS (frames per second) being so high. The Nvidia paper mentions this as well. The other thing I am doing is to simply save the augmented images in a directory so that I can have more control over the final distribution when binning the data.
